@@ -18,24 +18,6 @@ lines terminated by '\n'
   
 select * from Department;
 
-create table  Referral
-(
-refID int primary key,
-refDate date,
-refForm varchar(20),
-refFirstName varchar(25),
-refLastName varchar(35),
-)engine = innodb;
-
--- Load external file
-load data infile 'H:\\Refer.csv'
-into table Referral
-fields terminated by ','
-lines terminated by '\n'
-(refID,refDate,refForm,refFirstName,refLastName);
-  
-  select * from Referral;
-
 create table Patient
 (
 patientID int primary key,
@@ -44,8 +26,6 @@ pFirstName varchar(25),
 pLastName varchar(35),
 dob date,
 gender varchar(10)
-refID int,
-FOREIGN KEY (refID) REFERENCES Referral(refID)
 )engine = innodb;
 
 -- Load external file
@@ -53,7 +33,7 @@ load data infile 'H:\\Patient.csv'
 into table Patient
 fields terminated by ','
 lines terminated by '\n'
-(patientID,NHI,pFirstName,pLastName,dob,gender,refID);
+(patientID,NHI,pFirstName,pLastName,dob,gender);
   
   select * from Patient;
   
@@ -76,7 +56,25 @@ lines terminated by '\n'
   select * from Doctor;
   
  
+create table  Referral
+(
+refID int primary key,
+refDate date,
+refForm varchar(20),
+refFirstName varchar(25),
+refLastName varchar(35),
+patientID int,
+FOREIGN KEY (patientID) REFERENCES Patient(patientID)
+)engine = innodb;
 
+-- Load external file
+load data infile 'H:\\Refer.csv'
+into table Referral
+fields terminated by ','
+lines terminated by '\n'
+(refID,refDate,refForm,refFirstName,refLastName,patientID);
+  
+  select * from Referral;
 
 
 create table  Appointment
