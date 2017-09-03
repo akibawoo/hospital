@@ -1,10 +1,10 @@
 -- age
 use  hospital;
-select *,(year(now())-year(dob)) as 'age'
+select patientID,concat(pFirstName," ",pLastName) as 'Patient Name',dob,gender,NHI,(year(now())-year(dob)) as 'age'
 from patient;
 
 -- dayswait 
-select  patient.patientID,pFirstName,pLastName,gender,refDate,addWaitDate,datediff(Appointment.addWaitDate,Referral.refDate) 'DaysWait'
+select  patient.patientID,concat(pFirstName," ",pLastName) as 'Patient Name',gender,refDate,addWaitDate,datediff(Appointment.addWaitDate,Referral.refDate) 'DaysWait'
 from (Appointment inner join referral on
 Appointment.refID=Referral.refID) inner join patient on appointment.patientID =patient.patientID;
 
@@ -18,12 +18,12 @@ FROM ((Appointment INNER JOIN Referral ON Appointment.refID=Referral.refID) INNE
 group by depName;
 
 -- Q3
-select  appointment.patientID,pFirstName,pLastName,gender,HTE,datediff(fsaDate,refDate) as 'days wait',docFirstName,docLastName
+select  appointment.patientID,concat(pFirstName," ",pLastName) as 'Patient Name',gender,HTE,datediff(fsaDate,refDate) as 'days wait',concat(docFirstName," ",docLastName) as 'Doctor'
 FROM ((Appointment INNER JOIN patient ON Appointment.patientID=patient.patientID) INNER JOIN Doctor ON Appointment.empID=Doctor.empID) INNER JOIN Referral ON appointment.refID=Referral.refID
 order by doctor.empID;
 
 -- Q4
-select  depName,appointment.patientID,pFirstName,pLastName,gender,(year(now())-year(dob)) as 'age',HTE
+select  depName,appointment.patientID,concat(pFirstName," ",pLastName) as 'Patient Name',gender,(year(now())-year(dob)) as 'age',HTE
 FROM ((Appointment INNER JOIN patient ON Appointment.patientID=patient.patientID) INNER JOIN Doctor ON Appointment.empID=Doctor.empID) INNER JOIN Department ON Doctor.depID=Department.depID
 where (year(now())-year(dob))< 18 and depName like 'Pae%';
 
